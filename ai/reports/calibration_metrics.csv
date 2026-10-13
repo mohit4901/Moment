@@ -1,0 +1,4 @@
+model,brier_before_cal,brier_after_cal,ece_before_cal,ece_after_cal,ece_target_met,note
+XGBoost,0.1338,0.0333,0.2897,0.0033,True,Calibrator fit on val set; test set is held-out.
+LightGBM,0.215,0.0336,0.375,0.0031,True,Calibrator fit on val set; test set is held-out.
+FTTransformer,0.1597,0.0332,0.3264,0.0023,True,Calibrator fit on val set; test set is held-out.

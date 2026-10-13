@@ -1,0 +1,7 @@
+class,precision,recall,f1-score,support,note
+Routine,1.0,1.0,1.0,40.0,"N=3 base images, not statistically reliable, proof-of-concept only"
+Amber,1.0,1.0,1.0,40.0,"N=3 base images, not statistically reliable, proof-of-concept only"
+Critical,1.0,1.0,1.0,40.0,"N=3 base images, not statistically reliable, proof-of-concept only"
+accuracy,1.0,1.0,1.0,1.0,"N=3 base images, not statistically reliable, proof-of-concept only"
+macro avg,1.0,1.0,1.0,120.0,"N=3 base images, not statistically reliable, proof-of-concept only"
+weighted avg,1.0,1.0,1.0,120.0,"N=3 base images, not statistically reliable, proof-of-concept only"

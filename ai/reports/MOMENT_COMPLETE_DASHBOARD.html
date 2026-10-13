@@ -1,0 +1,3420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MOMENT — Maternal Obstetric Monitoring & Hemorrhage Triage Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0B1120;
+      --card-bg: #1E293B;
+      --card-border: #334155;
+      --primary: #3B82F6;
+      --accent: #8B5CF6;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      padding: 24px;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: #FFFFFF;
+    }
+    .tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 24px;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      background: #111827;
+      color: #94A3B8;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .search-bar {
+      padding: 10px 16px;
+      background: #111827;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: #FFF;
+      font-size: 14px;
+      width: 320px;
+      margin-bottom: 16px;
+    }
+    .tier-badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tier-Routine { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+    .tier-Enhanced { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+    .tier-Escalated { background: rgba(239, 68, 68, 0.2); color: #F87171; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <span class="badge">PRODUCTION READY DELIVERABLE</span>
+      <h1 style="font-size: 26px; margin-top: 8px;">MOMENT Clinical ML Intelligence System</h1>
+      <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Maternal Obstetric Monitoring, Early Warning & Hemorrhage Triage</p>
+    </div>
+    <div style="text-align: right;">
+      <span style="font-size: 12px; color: var(--text-muted);">Generated: 2026-09-19 22:04</span><br>
+      <span style="font-size: 13px; font-weight: 600; color: var(--success);">Held-Out Test Set N = 8,403</span>
+    </div>
+  </div>
+
+  <div class="grid-cards">
+    <div class="card">
+      <div class="card-title">Top Model PR-AUC</div>
+      <div class="card-value" style="color: #60A5FA;">0.1222</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">FT-Transformer (Prevalence: 3.60%)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top Model ROC-AUC</div>
+      <div class="card-value" style="color: #34D399;">0.6791</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">XGBoost (Calibrated Test)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calibration Quality</div>
+      <div class="card-value" style="color: #A78BFA;">0.0023</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Post-Cal ECE (Target &lt; 0.01 Met)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Shock Index Cohort</div>
+      <div class="card-value" style="color: #FBBF24;">952</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">El Ayadi / Miller Patients Validated</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('tab-models')">Model Leaderboard</button>
+    <button class="tab-btn" onclick="showTab('tab-features')">Feature Importances</button>
+    <button class="tab-btn" onclick="showTab('tab-triage')">Risk Tiers & Triage</button>
+    <button class="tab-btn" onclick="showTab('tab-si')">Shock Index Validation</button>
+    <button class="tab-btn" onclick="showTab('tab-patients')">Patient Records Explorer</button>
+  </div>
+
+  <div id="tab-models" class="tab-content active">
+    <div class="card">
+      <h3 style="margin-bottom: 12px;">Held-Out Test Set Performance Matrix</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Operating Point</th>
+              <th>Threshold</th>
+              <th>PR-AUC</th>
+              <th>ROC-AUC</th>
+              <th>Brier Score</th>
+              <th>ECE</th>
+              <th>Recall</th>
+              <th>Precision</th>
+              <th>F2 Score</th>
+              <th>TP / FP / FN</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">F2-Optimized (val-selected)</span></td>
+              <td>0.0451</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1194</td>
+              <td>0.6702</td>
+              <td>0.0333</td>
+              <td style="color: #34D399;">0.0033</td>
+              <td>47.5%</td>
+              <td>6.1%</td>
+              <td style="font-weight: 600;">0.2012</td>
+              <td>144 / 2223 / 159</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">90%-Specificity Operating Point</span></td>
+              <td>0.0625</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1194</td>
+              <td>0.6702</td>
+              <td>0.0333</td>
+              <td style="color: #34D399;">0.0033</td>
+              <td>12.5%</td>
+              <td>15.0%</td>
+              <td style="font-weight: 600;">0.1297</td>
+              <td>38 / 215 / 265</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">Default Standard (0.50)</span></td>
+              <td>0.5000</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1194</td>
+              <td>0.6702</td>
+              <td>0.0333</td>
+              <td style="color: #34D399;">0.0033</td>
+              <td>6.3%</td>
+              <td>65.5%</td>
+              <td style="font-weight: 600;">0.0766</td>
+              <td>19 / 10 / 284</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">F2-Optimized (val-selected)</span></td>
+              <td>0.0510</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1068</td>
+              <td>0.6331</td>
+              <td>0.0336</td>
+              <td style="color: #34D399;">0.0031</td>
+              <td>36.3%</td>
+              <td>6.6%</td>
+              <td style="font-weight: 600;">0.1912</td>
+              <td>110 / 1554 / 193</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">90%-Specificity Operating Point</span></td>
+              <td>0.0697</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1068</td>
+              <td>0.6331</td>
+              <td>0.0336</td>
+              <td style="color: #34D399;">0.0031</td>
+              <td>17.8%</td>
+              <td>10.4%</td>
+              <td style="font-weight: 600;">0.1562</td>
+              <td>54 / 463 / 249</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">Default Standard (0.50)</span></td>
+              <td>0.5000</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1068</td>
+              <td>0.6331</td>
+              <td>0.0336</td>
+              <td style="color: #34D399;">0.0031</td>
+              <td>5.9%</td>
+              <td>62.1%</td>
+              <td style="font-weight: 600;">0.0725</td>
+              <td>18 / 11 / 285</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">F2-Optimized (val-selected)</span></td>
+              <td>0.0526</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1222</td>
+              <td>0.6660</td>
+              <td>0.0332</td>
+              <td style="color: #34D399;">0.0023</td>
+              <td>32.3%</td>
+              <td>9.7%</td>
+              <td style="font-weight: 600;">0.2205</td>
+              <td>98 / 912 / 205</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">90%-Specificity Operating Point</span></td>
+              <td>0.0724</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1222</td>
+              <td>0.6660</td>
+              <td>0.0332</td>
+              <td style="color: #34D399;">0.0023</td>
+              <td>22.8%</td>
+              <td>11.1%</td>
+              <td style="font-weight: 600;">0.1883</td>
+              <td>69 / 551 / 234</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">Default Standard (0.50)</span></td>
+              <td>0.5000</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1222</td>
+              <td>0.6660</td>
+              <td>0.0332</td>
+              <td style="color: #34D399;">0.0023</td>
+              <td>5.6%</td>
+              <td>60.7%</td>
+              <td style="font-weight: 600;">0.0685</td>
+              <td>17 / 11 / 286</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">F2-Optimized (val-selected)</span></td>
+              <td>0.0486</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1311</td>
+              <td>0.6670</td>
+              <td>0.0331</td>
+              <td style="color: #34D399;">0.0028</td>
+              <td>37.0%</td>
+              <td>7.2%</td>
+              <td style="font-weight: 600;">0.2017</td>
+              <td>112 / 1452 / 191</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">90%-Specificity Operating Point</span></td>
+              <td>0.0534</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1311</td>
+              <td>0.6670</td>
+              <td>0.0331</td>
+              <td style="color: #34D399;">0.0028</td>
+              <td>28.1%</td>
+              <td>9.3%</td>
+              <td style="font-weight: 600;">0.2001</td>
+              <td>85 / 827 / 218</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05); color: #E2E8F0;">Default Standard (0.50)</span></td>
+              <td>0.5000</td>
+              <td style="font-weight: 600; color: #60A5FA;">0.1311</td>
+              <td>0.6670</td>
+              <td>0.0331</td>
+              <td style="color: #34D399;">0.0028</td>
+              <td>6.6%</td>
+              <td>62.5%</td>
+              <td style="font-weight: 600;">0.0804</td>
+              <td>20 / 12 / 283</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-features" class="tab-content">
+    <div class="card">
+      <h3 style="margin-bottom: 12px;">Top Clinical Predictors (Consolidated Multimodel Attribution)</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Avg Rank</th>
+              <th>Feature Name</th>
+              <th>Missing %</th>
+              <th>XGBoost Gain</th>
+              <th>LightGBM Gain</th>
+              <th>FTT Grad Norm</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#4</span></td>
+              <td style="font-weight: 600;">gestational_age</td>
+              <td>0.0%</td>
+              <td>24.81</td>
+              <td>26532.74</td>
+              <td>0.40834</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#4</span></td>
+              <td style="font-weight: 600;">placenta_previa</td>
+              <td>0.0%</td>
+              <td>89.91</td>
+              <td>16340.06</td>
+              <td>0.06645</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#4</span></td>
+              <td style="font-weight: 600;">coagulation_disorders</td>
+              <td>0.0%</td>
+              <td>193.48</td>
+              <td>29208.14</td>
+              <td>0.05074</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#5</span></td>
+              <td style="font-weight: 600;">prenatal_visits</td>
+              <td>0.0%</td>
+              <td>24.31</td>
+              <td>31991.31</td>
+              <td>0.06193</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#7</span></td>
+              <td style="font-weight: 600;">placental_abruption</td>
+              <td>0.0%</td>
+              <td>32.93</td>
+              <td>5513.12</td>
+              <td>0.05797</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#7</span></td>
+              <td style="font-weight: 600;">prior_csections</td>
+              <td>0.0%</td>
+              <td>64.38</td>
+              <td>30246.29</td>
+              <td>0.01496</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#8</span></td>
+              <td style="font-weight: 600;">multiple_births</td>
+              <td>0.0%</td>
+              <td>21.81</td>
+              <td>1158.19</td>
+              <td>0.07816</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#8</span></td>
+              <td style="font-weight: 600;">gravidity</td>
+              <td>0.0%</td>
+              <td>19.86</td>
+              <td>14526.82</td>
+              <td>0.05327</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#9</span></td>
+              <td style="font-weight: 600;">macrosomia</td>
+              <td>0.0%</td>
+              <td>40.02</td>
+              <td>4843.26</td>
+              <td>0.02365</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#10</span></td>
+              <td style="font-weight: 600;">has_prior_csection</td>
+              <td>0.0%</td>
+              <td>102.16</td>
+              <td>143.58</td>
+              <td>0.02190</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#11</span></td>
+              <td style="font-weight: 600;">gravidity_parity_gap</td>
+              <td>0.0%</td>
+              <td>17.00</td>
+              <td>9313.00</td>
+              <td>0.03905</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#11</span></td>
+              <td style="font-weight: 600;">maternal_hemoglobin_gdl</td>
+              <td>100.0%</td>
+              <td>0.00</td>
+              <td>0.00</td>
+              <td>0.11255</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#12</span></td>
+              <td style="font-weight: 600;">parity</td>
+              <td>0.0%</td>
+              <td>20.11</td>
+              <td>6397.60</td>
+              <td>0.01278</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#12</span></td>
+              <td style="font-weight: 600;">hypertensive_disorders</td>
+              <td>0.0%</td>
+              <td>18.81</td>
+              <td>1329.98</td>
+              <td>0.02731</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#12</span></td>
+              <td style="font-weight: 600;">hb_missing_indicator</td>
+              <td>0.0%</td>
+              <td>0.00</td>
+              <td>0.00</td>
+              <td>0.06260</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#12</span></td>
+              <td style="font-weight: 600;">is_preterm</td>
+              <td>0.0%</td>
+              <td>21.44</td>
+              <td>194.11</td>
+              <td>0.02345</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#14</span></td>
+              <td style="font-weight: 600;">has_prior_loss</td>
+              <td>0.0%</td>
+              <td>0.00</td>
+              <td>0.00</td>
+              <td>0.04695</td>
+            </tr>
+
+            <tr>
+              <td><span class="badge" style="background: #1E3A8A; color: #93C5FD;">#14</span></td>
+              <td style="font-weight: 600;">gestational_diabetes</td>
+              <td>0.0%</td>
+              <td>17.55</td>
+              <td>2568.61</td>
+              <td>0.00877</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-triage" class="tab-content">
+    <div class="card">
+      <h3 style="margin-bottom: 12px;">Risk Tier Stratification Matrix (Test Set, N=8,403)</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Risk Tier</th>
+              <th>Total Patients</th>
+              <th>% of Cohort</th>
+              <th>Actual PPH Cases</th>
+              <th>Non-PPH Cases</th>
+              <th>PPH Incidence Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td>7,181</td>
+              <td>85.5%</td>
+              <td style="font-weight: 600; color: #EF4444;">205</td>
+              <td>6,976</td>
+              <td style="font-weight: 600;">2.85%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td>1,130</td>
+              <td>13.4%</td>
+              <td style="font-weight: 600; color: #EF4444;">70</td>
+              <td>1,060</td>
+              <td style="font-weight: 600;">6.19%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">XGBoost</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td>92</td>
+              <td>1.1%</td>
+              <td style="font-weight: 600; color: #EF4444;">28</td>
+              <td>64</td>
+              <td style="font-weight: 600;">30.43%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td>6,739</td>
+              <td>80.2%</td>
+              <td style="font-weight: 600; color: #EF4444;">193</td>
+              <td>6,546</td>
+              <td style="font-weight: 600;">2.86%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td>1,570</td>
+              <td>18.7%</td>
+              <td style="font-weight: 600; color: #EF4444;">84</td>
+              <td>1,486</td>
+              <td style="font-weight: 600;">5.35%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">LightGBM</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td>94</td>
+              <td>1.1%</td>
+              <td style="font-weight: 600; color: #EF4444;">26</td>
+              <td>68</td>
+              <td style="font-weight: 600;">27.66%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td>7,393</td>
+              <td>88.0%</td>
+              <td style="font-weight: 600; color: #EF4444;">205</td>
+              <td>7,188</td>
+              <td style="font-weight: 600;">2.77%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td>901</td>
+              <td>10.7%</td>
+              <td style="font-weight: 600; color: #EF4444;">69</td>
+              <td>832</td>
+              <td style="font-weight: 600;">7.66%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">FTTransformer</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td>109</td>
+              <td>1.3%</td>
+              <td style="font-weight: 600; color: #EF4444;">29</td>
+              <td>80</td>
+              <td style="font-weight: 600;">26.61%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td>7,114</td>
+              <td>84.7%</td>
+              <td style="font-weight: 600; color: #EF4444;">201</td>
+              <td>6,913</td>
+              <td style="font-weight: 600;">2.83%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td>1,206</td>
+              <td>14.3%</td>
+              <td style="font-weight: 600; color: #EF4444;">74</td>
+              <td>1,132</td>
+              <td style="font-weight: 600;">6.14%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Ensemble</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td>83</td>
+              <td>1.0%</td>
+              <td style="font-weight: 600; color: #EF4444;">28</td>
+              <td>55</td>
+              <td style="font-weight: 600;">33.73%</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-si" class="tab-content">
+    <div class="card">
+      <h3 style="margin-bottom: 12px;">Module B: Shock Index Validation (El Ayadi / Miller Cohort)</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Clinical Tier</th>
+              <th>SI Range</th>
+              <th>Patients (≥ Tier)</th>
+              <th>Sensitivity</th>
+              <th>Specificity</th>
+              <th>PPV</th>
+              <th>NPV</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td style="font-weight: 600;">Normal</td>
+              <td>SI &ge; 0.0</td>
+              <td>952</td>
+              <td>100.0%</td>
+              <td>0.0%</td>
+              <td>3.99%</td>
+              <td>nan%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Watch</td>
+              <td>SI &ge; 0.9</td>
+              <td>910</td>
+              <td>100.0%</td>
+              <td>4.6%</td>
+              <td>4.18%</td>
+              <td>100.00%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Critical</td>
+              <td>SI &ge; 1.4</td>
+              <td>317</td>
+              <td>89.5%</td>
+              <td>69.0%</td>
+              <td>10.73%</td>
+              <td>99.37%</td>
+            </tr>
+
+            <tr>
+              <td style="font-weight: 600;">Severe Decomp.</td>
+              <td>SI &ge; 1.7</td>
+              <td>131</td>
+              <td>68.4%</td>
+              <td>88.5%</td>
+              <td>19.85%</td>
+              <td>98.54%</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-patients" class="tab-content">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3>Held-Out Test Set Patient Explorer (Showing 200 Sample Records)</h3>
+        <input type="text" id="patientSearch" class="search-bar" placeholder="Filter patient ID or risk tier..." onkeyup="filterPatients()">
+      </div>
+      <div style="overflow-x: auto; max-height: 550px;">
+        <table id="patientTable">
+          <thead>
+            <tr>
+              <th>Patient ID</th>
+              <th>Actual PPH</th>
+              <th>Gest. Age</th>
+              <th>Grav / Par</th>
+              <th>Visits</th>
+              <th>FTT Prob</th>
+              <th>XGB Prob</th>
+              <th>LGB Prob</th>
+              <th>Ensemble Tier</th>
+              <th>Consensus Flag</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td><code>MOMENT_TEST_00001</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>8</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00002</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>12</td>
+              <td>0.0282</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00003</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>3 / 0</td>
+              <td>8</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00004</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0323</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00005</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0510</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00006</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>12</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00007</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>7</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00008</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.0595</td>
+              <td>0.0614</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00009</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>5 / 1</td>
+              <td>13</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00010</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>5 / 2</td>
+              <td>7</td>
+              <td>0.0438</td>
+              <td>0.0417</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00011</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00012</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>8</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00013</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 0</td>
+              <td>8</td>
+              <td>0.0323</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00014</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 1</td>
+              <td>14</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00015</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 1</td>
+              <td>18</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00016</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0340</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00017</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00018</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>35.0 wks</td>
+              <td>2 / 0</td>
+              <td>19</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00019</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>3 / 1</td>
+              <td>11</td>
+              <td>0.0170</td>
+              <td>0.0183</td>
+              <td>0.0101</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00020</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>3 / 1</td>
+              <td>12</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0101</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00021</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0510</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00022</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>5 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00023</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>33.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00024</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 1</td>
+              <td>9</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00025</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00026</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>8</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00027</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>15</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00028</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>35.0 wks</td>
+              <td>6 / 1</td>
+              <td>5</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00029</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00030</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00031</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00032</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>35.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00033</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>7 / 2</td>
+              <td>9</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00034</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0323</td>
+              <td>0.0376</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00035</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>9</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00036</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>13</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00037</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>7 / 2</td>
+              <td>11</td>
+              <td>0.0105</td>
+              <td>0.0080</td>
+              <td>0.0000</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00038</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0101</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00039</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00040</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 2</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0183</td>
+              <td>0.0164</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00041</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>8</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00042</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00043</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00044</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00045</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0000</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00046</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>5 / 2</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00047</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>9</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00048</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0510</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00049</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 0</td>
+              <td>9</td>
+              <td>0.0213</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00050</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 1</td>
+              <td>3</td>
+              <td>0.0213</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00051</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 0</td>
+              <td>5</td>
+              <td>0.0345</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00052</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00053</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>9</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00054</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>9</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00055</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>3 / 0</td>
+              <td>12</td>
+              <td>0.0724</td>
+              <td>0.0451</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00056</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0278</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00057</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00058</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 1</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00059</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00060</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00061</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>13</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0461</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00062</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00063</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>3 / 1</td>
+              <td>6</td>
+              <td>0.0105</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00064</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>9</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00065</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00066</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00067</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00068</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>6 / 2</td>
+              <td>10</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00069</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 3</td>
+              <td>7</td>
+              <td>0.0396</td>
+              <td>0.0614</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00070</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0000</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00071</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00072</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>8</td>
+              <td>0.0105</td>
+              <td>0.0080</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00073</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>12</td>
+              <td>0.0282</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00074</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 1</td>
+              <td>10</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00075</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00076</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>5 / 2</td>
+              <td>13</td>
+              <td>0.0724</td>
+              <td>0.0376</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00077</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00078</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00079</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00080</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0278</td>
+              <td>0.0376</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00081</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>4 / 1</td>
+              <td>14</td>
+              <td>0.0000</td>
+              <td>0.0074</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00082</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00083</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00084</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00085</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00086</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0345</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00087</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0323</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00088</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00089</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>6 / 2</td>
+              <td>8</td>
+              <td>0.0435</td>
+              <td>0.0417</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00090</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>15</td>
+              <td>0.0099</td>
+              <td>0.0080</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00091</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>11</td>
+              <td>0.0345</td>
+              <td>0.0376</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00092</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 0</td>
+              <td>12</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00093</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00094</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>5 / 1</td>
+              <td>14</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00095</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0213</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00096</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0323</td>
+              <td>0.0340</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00097</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>1 / 0</td>
+              <td>4</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00098</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00099</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00100</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>4 / 1</td>
+              <td>4</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00101</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 1</td>
+              <td>15</td>
+              <td>0.0595</td>
+              <td>0.0553</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00102</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00103</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>5 / 0</td>
+              <td>6</td>
+              <td>0.0323</td>
+              <td>0.0376</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00104</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00105</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 1</td>
+              <td>5</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00106</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>5 / 2</td>
+              <td>14</td>
+              <td>0.0724</td>
+              <td>0.0553</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00107</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>3 / 1</td>
+              <td>19</td>
+              <td>0.0595</td>
+              <td>0.0614</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00108</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>15</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00109</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00110</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>35.0 wks</td>
+              <td>1 / 0</td>
+              <td>4</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00111</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>12</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00112</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>1 / 0</td>
+              <td>8</td>
+              <td>0.0396</td>
+              <td>0.0286</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00113</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00114</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00115</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00116</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0000</td>
+              <td>0.0000</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00117</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0595</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00118</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00119</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>16</td>
+              <td>0.0724</td>
+              <td>0.0748</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00120</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>14</td>
+              <td>0.0438</td>
+              <td>0.0553</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00121</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00122</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00123</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00124</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00125</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>5</td>
+              <td>0.0063</td>
+              <td>0.0000</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00126</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0323</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00127</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 2</td>
+              <td>12</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00128</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 0</td>
+              <td>14</td>
+              <td>0.0278</td>
+              <td>0.0340</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00129</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>8</td>
+              <td>0.0282</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00130</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00131</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>6 / 2</td>
+              <td>6</td>
+              <td>0.0105</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00132</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>4 / 2</td>
+              <td>9</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00133</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>4 / 1</td>
+              <td>10</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00134</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00135</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>9</td>
+              <td>0.0000</td>
+              <td>0.0000</td>
+              <td>0.0101</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00136</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 0</td>
+              <td>8</td>
+              <td>0.0396</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00137</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>1 / 0</td>
+              <td>12</td>
+              <td>0.0435</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00138</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>5 / 1</td>
+              <td>10</td>
+              <td>0.0212</td>
+              <td>0.0451</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00139</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>5 / 2</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00140</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 1</td>
+              <td>13</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0461</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00141</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00142</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>9</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00143</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>35.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00144</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>7</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00145</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0438</td>
+              <td>0.0748</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00146</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>2 / 1</td>
+              <td>10</td>
+              <td>0.0345</td>
+              <td>0.0451</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00147</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00148</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00149</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>9</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00150</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>4 / 1</td>
+              <td>11</td>
+              <td>0.0438</td>
+              <td>0.0553</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00151</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>5 / 1</td>
+              <td>9</td>
+              <td>0.0105</td>
+              <td>0.0074</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00152</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0213</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00153</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00154</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00155</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00156</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0213</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00157</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00158</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>3 / 1</td>
+              <td>5</td>
+              <td>0.0323</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00159</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>11</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00160</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>8</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00161</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00162</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>3 / 1</td>
+              <td>6</td>
+              <td>0.0724</td>
+              <td>0.0625</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00163</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00164</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0358</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00165</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>5 / 2</td>
+              <td>12</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0000</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00166</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>4 / 1</td>
+              <td>13</td>
+              <td>0.2500</td>
+              <td>0.3500</td>
+              <td>0.4583</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00167</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>14</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00168</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>13</td>
+              <td>0.0435</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00169</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 2</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0000</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00170</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00171</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>11</td>
+              <td>0.0345</td>
+              <td>0.0376</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00172</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>5</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00173</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 0</td>
+              <td>6</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00174</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>3 / 1</td>
+              <td>12</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00175</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0417</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00176</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0451</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00177</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>33.0 wks</td>
+              <td>4 / 1</td>
+              <td>14</td>
+              <td>0.0213</td>
+              <td>0.0080</td>
+              <td>0.0026</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00178</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 1</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0553</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00179</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0101</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00180</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>11</td>
+              <td>0.0345</td>
+              <td>0.0376</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00181</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>4 / 1</td>
+              <td>11</td>
+              <td>0.0063</td>
+              <td>0.0080</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00182</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>37.0 wks</td>
+              <td>1 / 0</td>
+              <td>8</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00183</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>10</td>
+              <td>0.0396</td>
+              <td>0.0376</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00184</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>3 / 1</td>
+              <td>12</td>
+              <td>0.0438</td>
+              <td>0.0451</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00185</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>13</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00186</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>1 / 0</td>
+              <td>5</td>
+              <td>0.0345</td>
+              <td>0.0286</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00187</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>38.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.0345</td>
+              <td>0.0376</td>
+              <td>0.0374</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00188</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>36.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0200</td>
+              <td>0.0183</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00189</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>41.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0170</td>
+              <td>0.0183</td>
+              <td>0.0226</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00190</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>4 / 1</td>
+              <td>18</td>
+              <td>0.0724</td>
+              <td>0.0614</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00191</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>1 / 0</td>
+              <td>6</td>
+              <td>0.0212</td>
+              <td>0.0183</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00192</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>3 / 1</td>
+              <td>3</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0612</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00193</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 1</td>
+              <td>10</td>
+              <td>0.0526</td>
+              <td>0.0451</td>
+              <td>0.0370</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00194</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>31.0 wks</td>
+              <td>2 / 1</td>
+              <td>6</td>
+              <td>0.0105</td>
+              <td>0.0080</td>
+              <td>0.0143</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00195</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>40.0 wks</td>
+              <td>4 / 0</td>
+              <td>6</td>
+              <td>0.0396</td>
+              <td>0.0553</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00196</code></td>
+              <td><span style="color:#EF4444; font-weight:700;">YES (1)</span></td>
+              <td>40.0 wks</td>
+              <td>2 / 1</td>
+              <td>12</td>
+              <td>0.7500</td>
+              <td>1.0000</td>
+              <td>0.6528</td>
+              <td><span class="tier-badge tier-Escalated">Escalated</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00197</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>2 / 0</td>
+              <td>17</td>
+              <td>0.0438</td>
+              <td>0.0614</td>
+              <td>0.0697</td>
+              <td><span class="tier-badge tier-Enhanced">Enhanced</span></td>
+              <td><span style="color:#EF4444; font-weight:700;">HIGH RISK</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00198</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>39.0 wks</td>
+              <td>1 / 0</td>
+              <td>11</td>
+              <td>0.0282</td>
+              <td>0.0340</td>
+              <td>0.0256</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00199</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>33.0 wks</td>
+              <td>3 / 1</td>
+              <td>11</td>
+              <td>0.0212</td>
+              <td>0.0286</td>
+              <td>0.0164</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+            <tr>
+              <td><code>MOMENT_TEST_00200</code></td>
+              <td><span style="color:#64748B;">No (0)</span></td>
+              <td>38.0 wks</td>
+              <td>4 / 1</td>
+              <td>6</td>
+              <td>0.0063</td>
+              <td>0.0074</td>
+              <td>0.0148</td>
+              <td><span class="tier-badge tier-Routine">Routine</span></td>
+              <td><span style="color:#64748B;">Routine</span></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function filterPatients() {
+      let input = document.getElementById("patientSearch").value.toUpperCase();
+      let table = document.getElementById("patientTable");
+      let tr = table.getElementsByTagName("tr");
+      for (let i = 1; i < tr.length; i++) {
+        let text = tr[i].textContent || tr[i].innerText;
+        tr[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

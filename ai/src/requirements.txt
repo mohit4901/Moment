@@ -1,0 +1,37 @@
+# MOMENT — Maternal Obstetric Monitoring, Early Warning & Hemorrhage Triage
+# Python dependencies
+
+# Core data science
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+pyarrow>=12.0.0
+
+# Data loading
+pyreadstat>=1.2.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
+
+# ML — tabular
+xgboost>=2.0.0
+lightgbm>=4.0.0
+scikit-learn>=1.3.0
+optuna>=3.3.0
+shap>=0.43.0
+
+# Calibration / metrics
+# (covered by sklearn)
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+missingno>=0.5.2
+
+# Deep learning (Module A FT-Transformer + Module C ResNet)
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Utilities
+tqdm>=4.65.0
+joblib>=1.3.0
+Pillow>=10.0.0

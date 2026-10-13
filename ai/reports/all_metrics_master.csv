@@ -1,0 +1,10 @@
+module,model,threshold_method,accuracy,precision,recall,f1,f2,roc_auc,pr_auc,brier,ece,note
+A,XGBoost,F2-optimized (val),0.7165,0.0608,0.4752,0.1079,0.2012,0.6702,0.1194,0.0333,0.0033,held-out test set; calibrator fit on val
+A,XGBoost,90%-Specificity (val),0.9429,0.1502,0.1254,0.1367,0.1297,0.6702,0.1194,0.0333,0.0033,held-out test set; calibrator fit on val
+A,LightGBM,F2-optimized (val),0.7921,0.0661,0.363,0.1118,0.1912,0.6331,0.1068,0.0336,0.0031,held-out test set; calibrator fit on val
+A,LightGBM,90%-Specificity (val),0.9153,0.1044,0.1782,0.1317,0.1562,0.6331,0.1068,0.0336,0.0031,held-out test set; calibrator fit on val
+A,FTTransformer,F2-optimized (val),0.8671,0.097,0.3234,0.1493,0.2205,0.666,0.1222,0.0332,0.0023,held-out test set; calibrator fit on val
+A,FTTransformer,90%-Specificity (val),0.9066,0.1113,0.2277,0.1495,0.1883,0.666,0.1222,0.0332,0.0023,held-out test set; calibrator fit on val
+C,FewShot-Routine,argmax,,1.0,1.0,1.0,,,,,,"EXPERIMENTAL — N=3 base images, not clinically validated"
+C,FewShot-Amber,argmax,,1.0,1.0,1.0,,,,,,"EXPERIMENTAL — N=3 base images, not clinically validated"
+C,FewShot-Critical,argmax,,1.0,1.0,1.0,,,,,,"EXPERIMENTAL — N=3 base images, not clinically validated"

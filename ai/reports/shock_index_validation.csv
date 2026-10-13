@@ -1,0 +1,5 @@
+tier,si_threshold,n_at_or_above,sensitivity,specificity,ppv,npv,outcome_note
+Normal,0.0,952,1.0,0.0,0.0399,,died=1 (hemorrhage mortality) used as proxy for severe shock
+Watch,0.9,910,1.0,0.046,0.0418,1.0,died=1 (hemorrhage mortality) used as proxy for severe shock
+Critical,1.4,317,0.8947,0.6904,0.1073,0.9937,died=1 (hemorrhage mortality) used as proxy for severe shock
+Severe Decomp.,1.7,131,0.6842,0.8851,0.1985,0.9854,died=1 (hemorrhage mortality) used as proxy for severe shock

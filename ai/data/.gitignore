@@ -1,0 +1,16 @@
+# Git ignore for data directory — never commit raw data or large files
+*.dta
+*.sav
+*.xlsx
+*.csv
+*.parquet
+*.zip
+*.gz
+*.tar
+borealis/
+processed/
+*.log
+
+# Keep manifest and feature list (small, tracked)
+!manifest.csv
+!feature_list.txt

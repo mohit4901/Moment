@@ -1,0 +1,68 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "MOMENT Single Source of Truth for all Clinical Thresholds, Odds Ratios, and Medical Decision Limits",
+  "_last_global_audit": "2026-09-11",
+  "blood_pad_cv_severity_bands": {
+    "routine_max_pct": 20.0,
+    "amber_min_pct": 20.0,
+    "amber_max_pct": 55.0,
+    "critical_min_pct": 55.0,
+    "clot_count_amber": 1,
+    "clot_count_critical": 2,
+    "source": "UNVERIFIED HEURISTIC - EXPERIMENTAL ONLY. No peer-reviewed optical 2D saturation percentage cutoff exists in WHO/FIGO literature. WHO/FIGO only validate gravimetric pad weighing (1g = 1mL) or calibrated drapes (e.g. BRASSS-V). These thresholds (Routine <20%, Amber 20-55%, Critical >=55%) are calibrated engineering surface coverage heuristics across test pads (1.2% light lochia, 54.9% moderate watch, 96.0% heavy critical PPH) to trigger mandatory bedside vital checks.",
+    "status": "UNVERIFIED HEURISTIC - DO NOT CLAIM CLINICAL TRIAL VALIDATION IN DEMO",
+    "last_verified": "2026-09-11 by Antigravity Engineering Review",
+    "note": "This is a SURFACE SATURATION severity signal only. Explicitly NOT a volumetric (mL) estimate. Must always ship with the disclaimer: '2D image saturation cannot determine 3D absorption volume.'"
+  },
+  "shock_index": {
+    "formula": "pulse / systolic_bp",
+    "normal_max": 0.89,
+    "watch_min": 0.90,
+    "critical_min": 1.40,
+    "severe_critical_min": 1.70,
+    "source": "El Ayadi AM, Nathan HL, Seed PT, et al. / Miller PLoS One obstetric cohort (Dryad DOI: 10.7272/Q6MS3QNX, n=952 active low-resource obstetric hemorrhage patients). Verified empirical test characteristics: SI >= 0.9 (Sensitivity 100.0%, Specificity 4.60% for adverse outcomes); SI >= 1.4 (Sensitivity 89.47%, Specificity 69.04%, NPV 99.37% for mortality / critical intervention); SI >= 1.7 (Sensitivity 68.42%, Specificity 88.51%).",
+    "status": "INDEPENDENTLY VERIFIED ON DRYAD COHORT",
+    "last_verified": "2026-09-11 by User & Antigravity on raw ElAyadiMiller_PLoSOneSIPaper.dta"
+  },
+  "blood_loss_thresholds_ml": {
+    "normal_max": 499,
+    "watch_min": 500,
+    "critical_min": 1000,
+    "source": "World Health Organization (WHO) Guidelines for the Management of Postpartum Haemorrhage and Retained Placenta (WHO 2012 / 2018 update): Postpartum Hemorrhage defined as blood loss >= 500 mL within 24 hours postpartum; Severe Postpartum Hemorrhage defined as blood loss >= 1000 mL.",
+    "status": "GLOBALLY ACCEPTED CLINICAL GOLD STANDARD",
+    "last_verified": "2026-09-11 against WHO Guidelines & FIGO 2022 PPH Global Guidelines"
+  },
+  "bleeding_velocity_ml_per_min": {
+    "watch_threshold": 10.0,
+    "critical_threshold": 20.0,
+    "source": "Obstetric Critical Care & Massive Transfusion Guidelines (Baskett TF, 2019; French College of Obstetricians and Gynaecologists / CNGOF Sentilhes et al. 2016): Persistent active continuing blood loss > 20 mL/min represents dynamic refractory hemorrhage outstripping physiological compensation, warranting immediate second-line medical/surgical intervention.",
+    "status": "CLINICALLY REFERENCED HEURISTIC",
+    "last_verified": "2026-09-11 against CNGOF & Obstetric Critical Care Literature"
+  },
+  "anemia_risk_multiplier": {
+    "normal_min_hb": 11.0,
+    "mild_min_hb": 10.0,
+    "mild_max_hb": 10.99,
+    "mild_or": 1.0252,
+    "moderate_min_hb": 7.0,
+    "moderate_max_hb": 9.99,
+    "moderate_or": 1.0602,
+    "severe_min_hb": 0.0,
+    "severe_max_hb": 6.99,
+    "severe_or": 1.1216,
+    "continuous_hb_or_per_gdl_drop": 1.0207,
+    "source": "NFHS-5 India (National Family Health Survey 2019-21), IAIR7EFL.DTA, linked maternal birth cohort N=169,334 (variables s443_1 x v457). Multivariable logistic regression controlling for maternal age, parity, ANC visits, and delivery setting.",
+    "status": "INDEPENDENTLY REPRODUCED TWICE WITH EXACT MATCH",
+    "last_verified": "2026-09-11 by User on 169,334 NFHS-5 records",
+    "note": "Do NOT use the Assam cohort OR=9.0 as the live multiplier without clearly labeling it as a separate, small single-hospital cohort figure, distinct from the NFHS-5 national estimate."
+  },
+  "postpartum_monitoring_protocol": {
+    "critical_window_description": "Fourth Stage of Labor: The immediate 2 hours postpartum represents the highest risk period for maternal mortality due to primary PPH, with uterine atony accounting for 70% to 80% of all primary PPH cases (WHO 2018, FIGO 2022, OpenStax Maternal-Newborn Nursing).",
+    "interval_first_2_hours_minutes": 15,
+    "interval_next_1_2_hours_minutes": 30,
+    "total_immediate_window_minutes": 120,
+    "source": "WHO Recommendations for Postpartum Care (2018) & NHM (National Health Mission) Dakshata Labour Room Quality Improvement Protocol: Mandates uterine tone, pulse, BP, and bleeding checks every 15 minutes during the first 2 hours post-delivery.",
+    "status": "NATIONAL & GLOBAL CLINICAL GUIDELINE",
+    "last_verified": "2026-09-11 against NHM Dakshata & WHO Postpartum Guidelines"
+  }
+}

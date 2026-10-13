@@ -1,0 +1,4 @@
+split,n_samples,n_pph_positive,n_pph_negative,pph_positive_rate,pct_of_total
+train,39209,1411,37798,0.036,70.0
+val,8402,302,8100,0.0359,15.0
+test,8403,303,8100,0.0361,15.0

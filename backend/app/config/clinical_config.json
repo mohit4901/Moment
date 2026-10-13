@@ -1,0 +1,83 @@
+{
+  "version": "WHO-2025.1",
+  "last_reviewed": "2026-09-23",
+  "guidelines_reference": "WHO 2025 PPH Recommendations, E-MOTIVE Trial (Brizuela et al.), El Ayadi et al. Shock Index Thresholds, India NHM/RHS Standards",
+  "shock_index": {
+    "normal": {
+      "max": 0.89,
+      "status": "Stable Hemodynamics",
+      "action": "Routine vitals monitoring every 15-30 minutes.",
+      "color": "emerald",
+      "source": "El Ayadi et al., 2016"
+    },
+    "alert": {
+      "min": 0.90,
+      "max": 1.39,
+      "status": "Impending Hemodynamic Decompensation (Alert)",
+      "action": "Increase monitoring to every 5-15 mins. Prepare IV access and alert attending medical officer.",
+      "color": "amber",
+      "source": "El Ayadi et al., 2016"
+    },
+    "urgent": {
+      "min": 1.40,
+      "max": 1.69,
+      "status": "Severe Hypovolemic Shock",
+      "action": "Trigger Obstetric Rapid Response Team. Rapid IV fluid bolus, prepare blood products.",
+      "color": "rose",
+      "source": "El Ayadi et al., 2016"
+    },
+    "critical": {
+      "min": 1.70,
+      "status": "Critical Cardiovascular Collapse / Impending Arrest",
+      "action": "Immediate Massive Transfusion Protocol (MTP), apply NASG, emergency surgical intervention.",
+      "color": "red",
+      "source": "El Ayadi et al., 2016"
+    }
+  },
+  "blood_loss_triggers": {
+    "early_pph_trigger_ml": 300,
+    "standard_pph_trigger_ml": 500,
+    "severe_pph_trigger_ml": 1000,
+    "who_early_action_rule": "300 mL blood loss combined with any abnormal vital sign (Shock Index >= 0.9, SBP <= 90, or Pulse >= 100) triggers immediate early PPH first-line bundle.",
+    "source": "WHO 2025 PPH Recommendations & E-MOTIVE Trial"
+  },
+  "first_line_bundle": [
+    {
+      "step": 1,
+      "name": "Oxytocin",
+      "dose": "10-20 IU IM/IV",
+      "hindi": "ऑक्सीटोसिन 10-20 IU जांघ में या ड्रिप में दें"
+    },
+    {
+      "step": 2,
+      "name": "Tranexamic Acid (TXA)",
+      "dose": "1g IV slow push within 3 hours",
+      "hindi": "ट्रैनेक्सैमिक एसिड 1g IV सुई से धीरे-धीरे दें"
+    },
+    {
+      "step": 3,
+      "name": "Bimanual Uterine Massage",
+      "dose": "Continuous fundal compression",
+      "hindi": "पेट पर गर्भाशय की लगातार मालिश जारी रखें"
+    },
+    {
+      "step": 4,
+      "name": "IV Fluid Resuscitation",
+      "dose": "Two 16G large-bore cannulae with Normal Saline",
+      "hindi": "दो 16G मोटी सुई से नॉर्मल सलाइन ड्रिप चालू करें"
+    }
+  ],
+  "facility_routing_weights": {
+    "clinical_capability": 0.40,
+    "road_eta": 0.30,
+    "blood_availability": 0.20,
+    "road_distance": 0.10,
+    "description": "Multi-criteria decision routing for rural obstetric emergencies"
+  },
+  "emergency_hotlines": {
+    "national_ambulance": "108",
+    "maternal_transport": "102",
+    "police": "112",
+    "women_helpline": "1091"
+  }
+}

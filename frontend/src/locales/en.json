@@ -1,0 +1,55 @@
+{
+  "brand": "MOMENT",
+  "app_subtitle": "Maternal Obstetric Monitoring & Hemorrhage Intelligence",
+  "anm_badge": "ANM • Active Session",
+  "roles": {
+    "anm": "ANM / ASHA (Rural Frontline)",
+    "nurse": "Staff Nurse / GNM (Labor Room)",
+    "doctor": "Obstetrician / Doctor (FRU)",
+    "hospital": "Hospital Triage Bay (Receiving)",
+    "district": "District Health Officer (Admin)",
+    "ambulance": "108 Ambulance Operator (CAD)"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Clinical Dashboard",
+    "scan_report": "Scan Clinical Report",
+    "measure_blood": "Measure Blood Loss",
+    "emergency_108": "108 Emergency Call",
+    "hospital_queue": "Hospital Triage Queue",
+    "district_analytics": "District Analytics",
+    "switch_role": "Switch Role"
+  },
+  "actions": {
+    "save": "Save Reading",
+    "confirm_assess": "Confirm & Assess Risk",
+    "call_108": "Call 108 Ambulance & Alert Hospital",
+    "record_vitals": "Record 15-Min Vitals",
+    "snap_pad": "Take Pad Photo",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "retry": "Retry",
+    "dismiss": "Dismiss"
+  },
+  "clinical": {
+    "blood_loss": "Blood Loss",
+    "pulse": "Pulse Rate",
+    "bp": "Blood Pressure",
+    "shock_index": "Shock Index",
+    "uterine_tone": "Uterine Tone",
+    "hemoglobin": "Maternal Hemoglobin",
+    "blood_group": "Blood Group",
+    "gestational_age": "Gestational Age",
+    "prior_csection": "Prior C-Section",
+    "risk_level": "PPH Risk Level",
+    "normal": "Normal (<300 mL)",
+    "watch": "Watch (300-500 mL)",
+    "danger": "Critical Active PPH (≥500 mL)"
+  },
+  "alerts": {
+    "who_early": "WHO 2025 Early PPH Alert: 300 mL blood loss + abnormal vital sign. Initiate first-line bundle.",
+    "who_standard": "Active PPH Alert: ≥500 mL blood loss. Immediate emergency resuscitation required.",
+    "shock_alert": "Shock Index ≥ 0.9: Impending hemodynamic decompensation. Prepare IV lines.",
+    "ambulance_dispatched": "108 Ambulance dispatched. Receiving hospital triage alerted."
+  }
+}

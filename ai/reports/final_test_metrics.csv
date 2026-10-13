@@ -1,0 +1,7 @@
+model,threshold_method,threshold_value,accuracy,precision,recall,f1,f2,roc_auc,pr_auc,brier_score,ece
+XGBoost,F2-optimized (val),0.0451,0.7165,0.0608,0.4752,0.1079,0.2012,0.6702,0.1194,0.0333,0.0033
+XGBoost,90%-Specificity (val),0.0625,0.9429,0.1502,0.1254,0.1367,0.1297,0.6702,0.1194,0.0333,0.0033
+LightGBM,F2-optimized (val),0.051,0.7921,0.0661,0.363,0.1118,0.1912,0.6331,0.1068,0.0336,0.0031
+LightGBM,90%-Specificity (val),0.0697,0.9153,0.1044,0.1782,0.1317,0.1562,0.6331,0.1068,0.0336,0.0031
+FTTransformer,F2-optimized (val),0.0526,0.8671,0.097,0.3234,0.1493,0.2205,0.666,0.1222,0.0332,0.0023
+FTTransformer,90%-Specificity (val),0.0724,0.9066,0.1113,0.2277,0.1495,0.1883,0.666,0.1222,0.0332,0.0023

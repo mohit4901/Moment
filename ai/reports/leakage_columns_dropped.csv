@@ -1,0 +1,5 @@
+original_column_name,canonical_name,reason
+Uterine atony,LEAKAGE_soft_canal_laceration,outcome leakage — would not be known at admission time
+Retained placenta,LEAKAGE_uterine_atony,outcome leakage — would not be known at admission time
+Soft birth canal laceration,LEAKAGE_retained_placenta,outcome leakage — would not be known at admission time
+Maternal Near-Miss,LEAKAGE_maternal_near_miss,outcome leakage — would not be known at admission time
