@@ -738,7 +738,7 @@ async def scan_clinical_report(file: UploadFile = File(...)):
             elif "age" == k:
                 unit = " yrs"
             val_str = f"{v}{unit}"
-            print(f"      • {label:<22}: \033[92;1m{val_str:<18}\033[0m (Confidence: {conf:.0%})")
+            print(f"      • {label:<22}: \033[92;1m{val_str}\033[0m")
 
     print("═" * 72 + "\n")
 
