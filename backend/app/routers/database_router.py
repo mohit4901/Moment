@@ -688,13 +688,59 @@ async def scan_clinical_report(file: UploadFile = File(...)):
     raw_text = ocr_service.extract_text(contents)
     parsed = ocr_service.parse_clinical_entities(raw_text)
 
-    print(f"📄 \033[94;1m[AI OCR REPORT SCANNER]\033[0m Scanned Image: {file.filename} ({len(contents)} bytes)")
-    print(f"   ↳ Extracted Key Clinical Biomarkers:")
+    print("\n" + "═" * 72)
+    print(f"📄 \033[94;1m[AI CLINICAL OCR SCANNER]\033[0m Document: {file.filename} ({len(contents) / 1024:.1f} KB)")
+    
+    # Clean single-line snippet showing document transcription occurred without dumping 100 lines
+    clean_sample = " ".join(raw_text.split()[:22])
+    print(f"   ↳ \033[90mTranscribed Document Snippet: \"{clean_sample}...\" ({len(raw_text)} chars)\033[0m")
+    print(f"   ↳ \033[92;1mParsed Clinical Obstetric Biomarkers:\033[0m")
+
+    label_map = {
+        "name": "Patient Name",
+        "age": "Maternal Age",
+        "gestational_age": "Gestational Age",
+        "gravidity": "Gravida (G)",
+        "parity": "Para (P)",
+        "maternal_hemoglobin_gdl": "Hemoglobin (Hb)",
+        "platelets": "Platelet Count",
+        "blood_group": "Blood Group",
+        "systolic_bp": "Systolic BP",
+        "diastolic_bp": "Diastolic BP",
+        "pulse": "Pulse Rate",
+        "uterine_tone": "Uterine Tone",
+        "prior_csections": "Prior C-Sections",
+        "hypertensive_disorders": "Hypertension (PE)",
+        "gestational_diabetes": "Gestational Diabetes",
+        "coagulation_disorders": "Coagulation Risk",
+        "multiple_births": "Multiple Births",
+    }
+
     for k, v in parsed["extracted_fields"].items():
-        if k == "raw_text" or k.startswith("raw_"):
+        if k in ("raw_text", "ocr_status", "ocr_warning") or k.startswith("raw_"):
             continue
         if v is not None and v != "":
-            print(f"      • {k}: \033[92m{v}\033[0m (Confidence: {parsed['field_confidence'].get(k, 0):.0%})")
+            conf = parsed.get("field_confidence", {}).get(k, 0)
+            if v == 0 and conf == 0:
+                continue
+            label = label_map.get(k, k.replace("_", " ").title())
+            unit = ""
+            if "hemoglobin" in k:
+                unit = " g/dL"
+            elif "platelet" in k:
+                unit = " /µL"
+            elif "bp" in k:
+                unit = " mmHg"
+            elif "pulse" in k:
+                unit = " bpm"
+            elif "gestational_age" in k:
+                unit = " wks"
+            elif "age" == k:
+                unit = " yrs"
+            val_str = f"{v}{unit}"
+            print(f"      • {label:<22}: \033[92;1m{val_str:<18}\033[0m (Confidence: {conf:.0%})")
+
+    print("═" * 72 + "\n")
 
     # Save to clinical_reports table
     rep_id = f"REP-{uuid.uuid4().hex[:8].upper()}"
