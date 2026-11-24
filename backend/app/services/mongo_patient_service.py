@@ -51,7 +51,6 @@ def list_patients_mongo(
     """
     db = get_mongo_db()
     if db is None:
-        logger.warning("MongoDB Atlas unavailable; falling back to SQLite for list_patients.")
         return _list_patients_sqlite(search, user_id, risk_tier)
 
     try:

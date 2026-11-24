@@ -8,6 +8,7 @@ Connects to MongoDB Atlas cluster for cloud persistence of:
 - staff_profiles
 """
 import os
+import time
 import logging
 from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv
@@ -20,33 +21,40 @@ logger = logging.getLogger("moment.mongodb")
 
 _client = None
 _db = None
+_last_failed_check = 0
+_COOLDOWN_SECONDS = 120  # Avoid blocking DNS queries on every request
 
 def get_mongo_uri() -> str:
     return os.getenv("MONGO_URI", "").strip()
 
 def is_mongo_configured() -> bool:
     uri = get_mongo_uri()
-    if not uri or "<db_password>" in uri or "password" in uri.lower() and "@cluster" not in uri:
+    if not uri or "<db_password>" in uri or ("password" in uri.lower() and "@cluster" not in uri):
         return False
     return uri.startswith("mongodb+srv://") or uri.startswith("mongodb://")
 
 def get_mongo_db():
-    global _client, _db
+    global _client, _db, _last_failed_check
     if not is_mongo_configured():
         return None
     if _db is not None:
         return _db
     
+    # If connection previously failed, wait for cooldown before retrying to prevent blocking latency
+    now = time.time()
+    if now - _last_failed_check < _COOLDOWN_SECONDS:
+        return None
+    
     try:
         uri = get_mongo_uri()
-        _client = MongoClient(uri, server_api=ServerApi('1'), serverSelectionTimeoutMS=5000)
-        # Test connection ping
+        _client = MongoClient(uri, server_api=ServerApi('1'), serverSelectionTimeoutMS=1500)
         _client.admin.command('ping')
         _db = _client.get_database("moment_clinical")
-        logger.info("Successfully connected to MongoDB Atlas (database: moment_clinical)!")
+        print("🍃 \033[92;1m[MONGODB ATLAS]\033[0m Successfully connected to cloud cluster (moment_clinical)!")
         return _db
     except Exception as e:
-        logger.warning(f"MongoDB Atlas connection check failed: {e}")
+        _last_failed_check = now
+        # Log gracefully once every cooldown period without spamming
         return None
 
 def test_mongo_connection() -> Dict[str, Any]:

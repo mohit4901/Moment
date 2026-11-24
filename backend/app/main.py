@@ -105,14 +105,24 @@ async def clinical_console_logger(request, call_next):
     path = request.url.path
     method = request.method
     
-    # Check if request is a clinical / dynamic operation
-    is_alert_polling = path == "/api/alerts" and method == "GET"
-    is_health = path == "/api/health" or "/assets/" in path or path.endswith((".js", ".css", ".ico", ".svg", ".png", ".jpg"))
-    is_clinical = not is_health and any(k in path for k in [
-        "/api/predict", "/api/reports", "/api/vision", "/api/vitals",
-        "/api/blood-loss", "/api/patients", "/api/twilio", "/api/auth",
-        "/api/facilities", "/api/db"
-    ])
+    # Quiet background polling requests (don't spam console during routine UI polling)
+    is_quiet_polling = method == "GET" and (
+        path in ("/api/health", "/health", "/api/alerts", "/api/dashboard/analytics") or
+        path.startswith("/api/patients") or
+        path.startswith("/api/facilities") or
+        path.startswith("/api/metrics") or
+        "/assets/" in path or
+        path.endswith((".js", ".css", ".ico", ".svg", ".png", ".jpg"))
+    )
+    
+    # Meaningful clinical operations to highlight in terminal
+    is_clinical = not is_quiet_polling and (
+        any(k in path for k in [
+            "/api/predict", "/api/reports", "/api/vision", "/api/vitals",
+            "/api/blood-loss", "/api/twilio", "/api/emergencies"
+        ]) or (method in ("POST", "PUT", "DELETE") and "/api/patients" in path)
+        or (method == "POST" and "/api/auth" in path)
+    )
     
     if is_clinical:
         print("\n" + "═" * 75)
@@ -163,6 +173,7 @@ app.include_router(operational_router, prefix="/api")
 app.include_router(translate_router)
 
 
+@app.get("/health", tags=["System"])
 @app.get("/api/health", tags=["System"])
 def health_check():
     model_svc = ModelService.get_instance()

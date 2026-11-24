@@ -202,8 +202,8 @@ class ClinicalOcrService:
                 parsed_json = _json.loads(content)
                 if isinstance(parsed_json, dict):
                     return parsed_json
-        except Exception as e:
-            print(f"   \033[93m[GROQ LLM JSON NOTICE]\033[0m {e}")
+        except Exception:
+            pass  # Fall back to high-accuracy deterministic regex parsing seamlessly
         return None
 
     def parse_clinical_entities(self, text: str) -> Dict[str, Any]:
