@@ -2495,7 +2495,7 @@ export default function ClinicalDashboard({
                           <Clock className="w-5 h-5" />
                         </div>
                         <div>
-                          <h2 className="text-base font-black text-slate-900 flex items-center space-x-2">
+                          <h2 className="text-base font-black text-slate-900 flex flex-wrap items-center gap-2">
                             <span>15-मिनट निगरानी चक्र (15-Minute Monitoring Cycle)</span>
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-50 text-[#981228] border border-rose-200">
                               WHO Protocol
@@ -3389,7 +3389,7 @@ export default function ClinicalDashboard({
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2 pt-2">
+                    <div className="flex flex-wrap items-center gap-2 pt-2">
                       <button
                         onClick={() => speakHindi(`आपातकालीन अलर्ट: मरीज को तुरंत पीजीआईएमएस रोहतक रेफर किया जा रहा है। एम्बुलेंस चालक को सूचित कर दिया गया है।`)}
                         className="px-4 py-2 bg-white text-[#981228] font-bold text-xs rounded-xl hover:bg-rose-50 transition cursor-pointer flex items-center space-x-1.5"
@@ -3716,8 +3716,8 @@ export default function ClinicalDashboard({
 
       {/* ── MODAL: NEW MOTHER REGISTRATION (WITH OCR / PHOTO OPTION) ── */}
       {showNewMotherModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-slate-200 max-w-sm w-full p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-sm w-full p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 max-h-[92vh] overflow-y-auto my-auto">
 
             {/* Header */}
             <div className="flex items-center justify-between">

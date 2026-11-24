@@ -169,8 +169,8 @@ export default function MaternalRegistryView({
             {currentUser?.role || 'ANM'}
           </div>
           <div>
-            <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-black text-slate-900">{currentUser?.full_name || 'सुमन देवी (ANM Suman Devi)'}</h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-base sm:text-lg font-black text-slate-900">{currentUser?.full_name || 'सुमन देवी (ANM Suman Devi)'}</h1>
               <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-red-100 text-red-700">
                 {currentUser?.role || 'ANM'}
               </span>
@@ -181,18 +181,18 @@ export default function MaternalRegistryView({
                 </span>
               ) : null}
             </div>
-            <div className="text-xs text-slate-500 font-medium flex items-center space-x-3 mt-1">
+            <div className="text-xs text-slate-500 font-medium flex flex-wrap items-center gap-2 mt-1">
               <span className="flex items-center space-x-1">
                 <Building2 className="w-3.5 h-3.5 text-slate-400" />
                 <span>{currentUser?.facility_name || 'उप-स्वास्थ्य केंद्र खेड़ी साध (Sub-Centre Khedi Sadh)'}</span>
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span className="text-slate-600 font-semibold">{currentUser?.rural_area || 'गांव खेड़ी साध, रोहतक'}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 self-stretch md:self-auto">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 self-stretch md:self-auto">
           <button
             onClick={handleWipeDatabase}
             className="px-3.5 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-rose-50 text-slate-600 hover:text-red-700 transition flex items-center space-x-1.5 justify-center cursor-pointer"
@@ -437,8 +437,8 @@ export default function MaternalRegistryView({
 
       {/* ── REGISTER NEW MOTHER MODAL ── */}
       {isRegisterModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-xl w-full p-6 text-slate-900 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-xl w-full p-4 sm:p-6 text-slate-900 my-auto max-h-[92vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
               <div className="flex items-center space-x-2.5">

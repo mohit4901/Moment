@@ -232,22 +232,22 @@ export default function App() {
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-rose-100 selection:text-rose-900">
       {/* Emergency Active Global Alert (if triggered) */}
       {emergencyAlert && (
-        <div className="bg-red-700 text-white px-4 py-3 flex items-center justify-between shadow-lg sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
-            <div className="flex items-center space-x-3">
+        <div className="bg-red-700 text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full">
+            <div className="flex items-center space-x-2.5 min-w-0">
               <AlertOctagon className="w-5 h-5 animate-pulse text-white flex-shrink-0" />
-              <div>
-                <span className="font-black text-sm tracking-wide">{emergencyAlert.title}: </span>
-                <span className="text-xs text-rose-100">{emergencyAlert.message}</span>
+              <div className="min-w-0">
+                <span className="font-black text-xs sm:text-sm tracking-wide">{emergencyAlert.title}: </span>
+                <span className="text-xs text-rose-100 truncate block sm:inline">{emergencyAlert.message}</span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 flex-shrink-0 self-end sm:self-auto">
               <button
                 onClick={() => {
                   setCurrentView('clinical');
                   setEmergencyAlert(null);
                 }}
-                className="px-3 py-1 bg-white text-red-700 hover:bg-rose-50 rounded-lg text-xs font-bold transition-all flex items-center space-x-1"
+                className="px-3 py-1 bg-white text-red-700 hover:bg-rose-50 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer"
               >
                 <span>Open Emergency Protocol</span>
                 <ArrowRight className="w-3.5 h-3.5" />

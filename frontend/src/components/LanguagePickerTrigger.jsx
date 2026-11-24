@@ -63,20 +63,23 @@ export default function LanguagePickerTrigger({ lang = 'hi', setLang }) {
       <button
         type="button"
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center space-x-1.5 h-9 px-2.5 sm:px-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-300 hover:border-[#981228] transition-all cursor-pointer whitespace-nowrap flex-shrink-0 shadow-2xs select-none"
+        className="flex items-center space-x-1 sm:space-x-1.5 h-8 sm:h-9 px-2 sm:px-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-300 hover:border-[#981228] transition-all cursor-pointer whitespace-nowrap flex-shrink-0 shadow-2xs select-none"
         title="भाषा चुनें (Select Regional Indian Language)"
         id="language-dropdown-button"
       >
-        <div className="w-5 h-5 rounded-full bg-rose-50 flex items-center justify-center text-[#981228] flex-shrink-0">
-          <Globe className="w-3.5 h-3.5" />
+        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-rose-50 flex items-center justify-center text-[#981228] flex-shrink-0">
+          <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
         </div>
-        <span className="font-extrabold text-slate-900 tracking-tight">
+        <span className="font-extrabold text-slate-900 tracking-tight hidden sm:inline max-w-[90px] md:max-w-none truncate">
           {currentLangObj.nativeName}
         </span>
-        <span className="text-[10px] text-slate-500 font-mono uppercase font-bold hidden sm:inline">
+        <span className="font-extrabold text-slate-900 text-xs sm:hidden uppercase">
+          {currentLangObj.code}
+        </span>
+        <span className="text-[10px] text-slate-500 font-mono uppercase font-bold hidden md:inline">
           ({currentLangObj.code})
         </span>
-        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 flex-shrink-0 ${dropdownOpen ? 'rotate-180 text-[#981228]' : ''}`} />
+        <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 transition-transform duration-200 flex-shrink-0 ${dropdownOpen ? 'rotate-180 text-[#981228]' : ''}`} />
       </button>
 
       {/* ── Rich Anchored Dropdown Menu (22+ Languages List) ── */}

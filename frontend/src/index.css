@@ -6,7 +6,22 @@
   }
 
   html {
-    font-size: 16.5px; /* Increases root font scale across entire app for superior clinical legibility */
+    font-size: 14.5px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (min-width: 640px) {
+    html {
+      font-size: 15.5px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 16.5px; /* Increases root font scale across desktop for superior clinical legibility */
+    }
   }
 
   body {
@@ -16,9 +31,29 @@
     font-size: 1rem;
     line-height: 1.55;
     min-height: 100vh;
+    width: 100%;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
   }
+
+  /* Prevent media elements from overflowing narrow mobile viewports */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100%;
+  }
+}
+
+/* Touch-friendly horizontal scroll without ugly browser bars */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Clinical White UI cards & panels */

@@ -140,7 +140,7 @@ export default function TwilioEmergencyDispatchModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl border-2 border-red-500 max-w-xl w-full p-5 sm:p-7 shadow-2xl space-y-5 relative my-auto overflow-hidden">
+      <div className="bg-white rounded-3xl border-2 border-red-500 max-w-xl w-full p-4 sm:p-7 shadow-2xl space-y-4 sm:space-y-5 relative my-auto max-h-[94vh] overflow-y-auto">
         
         {/* Glowing emergency accent top bar */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 animate-pulse" />

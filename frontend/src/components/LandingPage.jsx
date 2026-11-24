@@ -444,10 +444,10 @@ export default function LandingPage({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             
             {/* LEFT: Realistic Smartphone Mockup */}
-            <div className="lg:col-span-4 flex justify-center order-2 lg:order-1">
-              <div className="w-[300px] sm:w-[320px] rounded-[44px] bg-slate-900 p-3 shadow-2xl ring-1 ring-slate-900/10 transform transition-transform hover:scale-[1.01]">
+            <div className="lg:col-span-4 flex justify-center order-2 lg:order-1 w-full px-2">
+              <div className="w-full max-w-[310px] sm:max-w-[320px] rounded-[40px] sm:rounded-[44px] bg-slate-900 p-2.5 sm:p-3 shadow-2xl ring-1 ring-slate-900/10 transform transition-transform hover:scale-[1.01]">
                 {/* Phone Outer Shell */}
-                <div className="relative bg-white rounded-[36px] overflow-hidden border border-slate-200">
+                <div className="relative bg-white rounded-[32px] sm:rounded-[36px] overflow-hidden border border-slate-200">
                   {/* Status Bar */}
                   <div className="bg-white px-6 pt-3 pb-1 flex items-center justify-between text-[11px] font-semibold text-slate-800 border-b border-slate-50">
                     <span>09:41</span>
@@ -528,7 +528,7 @@ export default function LandingPage({
             {/* CENTER: Hero Copy & CTA Buttons */}
             <div className="lg:col-span-4 text-center lg:text-center order-1 lg:order-2 space-y-6">
               <div className="space-y-2">
-                <h1 className="text-4xl sm:text-5xl lg:text-5xl font-black text-slate-950 tracking-tight leading-[1.1]">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-[1.15] sm:leading-[1.1]">
                   <span>{str.heroTitle1}</span>
                   <br />
                   <span>{str.heroTitle2}</span>
